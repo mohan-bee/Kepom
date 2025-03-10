@@ -42,7 +42,4 @@ Kepom is a real-time music streaming web application built using the MERN (Mongo
 
 Contributions are welcome! Please fork the repo and submit a pull request.
 
-## License
-
-This project is licensed under the MIT License.
 
