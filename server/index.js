@@ -15,11 +15,12 @@ const PORT = process.env.PORT
 
 app.use(express.json())
 app.use(session({
-    secret: "secret",  
+    secret: "secret",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, httpOnly: true }  
+    cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true }
 }));
+
 
 app.use(passport.initialize())
 app.use(passport.session())
