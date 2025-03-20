@@ -1,24 +1,37 @@
-const express = require('express');
-const passport = require('passport');
-const router = express.Router();
+const router = require('express').Router()
+const passport = require('passport')
 
-// Google OAuth Route
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-// Google OAuth Callback
-router.get('/google/callback', 
-    passport.authenticate('google', { failureRedirect: '/' }),
-    (req, res) => {
-        res.redirect(process.env.CLIENT_URL);  // Redirect to frontend after login
+router.get('/login/success', (req,res) => {
+    if(req.user){
+        return res.status(200).json({msg: "Login Success", user: req.user})
     }
-);
+})
 
-// Logout Route
-router.get('/logout', (req, res) => {
-    req.logout(err => {
-        if (err) { return next(err); }
-        res.redirect('/');
+router.get('/login/failed', (req,res) => {
+    return res.status(401).send("Login Failed")
+})
+router.get("/google/callback", passport.authenticate('google', {
+    successRedirect: process.env.CLIENT_URL,
+    failureRedirect: '/login/failed'
+}))
+
+router.get('/google', passport.authenticate('google', ["profile", "email"]))
+
+router.get('/logout', (req, res, next) => {
+    req.logout(function(err) {  // Ensure logout callback is handled
+        if (err) {
+            return next(err);
+        }
+        req.session.destroy((err) => {  // Destroy session properly
+            if (err) {
+                return res.status(500).json({ message: "Logout failed" });
+            }
+            res.clearCookie('connect.sid');  // Clear session cookie (important)
+            res.redirect(process.env.CLIENT_URL);  // Redirect to frontend
+        });
     });
 });
 
-module.exports = router;
+
+module.exports = router
