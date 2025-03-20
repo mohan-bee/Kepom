@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Kepom",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
