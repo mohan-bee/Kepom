@@ -13,7 +13,7 @@ import axios from 'axios';
 import AddPlaylist from './pages/AddPlaylist';
 
 const App = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(["a"]);
   const [currentSong, setCurrentSong] = useState(null); // Track the current playing song
   const [nextSong, setNextSong] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false);
@@ -39,10 +39,14 @@ console.log(user)
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/profile' element={user ? <ProfilePage user={user}/> : <LoginPage />} />
+        <Route path='/profile' element={ <ProfilePage user={user}/> } />
+        <Route path='/add-music' element={ <AddMusic/> } />
+        <Route path='/login' element={<HomePage />} />
+        <Route path='/' element={<HomePage user={user}/> } />
+        {/* <Route path='/profile' element={user ? <ProfilePage user={user}/> : <LoginPage />} />
         <Route path='/add-music' element={user ? <AddMusic/> : <LoginPage />} />
         <Route path='/login' element={user ? <HomePage /> : <LoginPage />} />
-        <Route path='/' element={user ? <HomePage user={user}/> : <LoginPage />} />
+        <Route path='/' element={user ? <HomePage user={user}/> : <LoginPage />} /> */}
         <Route path='/playlists/:id'  element={<Playlist setNextSong={setNextSong} isPlaying={isPlaying}  currentSong={currentSong} setCurrentSong={setCurrentSong} />} />
         <Route path='/rooms'  element={<RoomsPage />} />
         <Route path='/room'  element={<RoomPage />} />
