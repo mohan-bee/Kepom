@@ -1,63 +1,53 @@
-const express = require("express");
-const cors = require("cors");
-const passport = require("passport");
-const session = require("express-session");
-require("dotenv").config();
-require("./config/passport"); // Import Passport configuration
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const session = require('express-session');
+const passport = require('passport');
+const connectDB = require('./config/db');
+require('./config/passport');
 
-const authRoute = require("./routes/auth.route");
-const musicRoute = require("./routes/music.route");
-const playlistRoute = require("./routes/playlist.route");
-const connectDB = require("./config/db");
+const authRoute = require('./routes/auth.route');
+const musicRoute = require('./routes/music.route');
+const playlistRoute = require('./routes/playlist.route');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// ✅ CORS Configuration
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL, // Frontend URL (e.g., http://localhost:3000)
-    methods: "GET, POST, PUT, DELETE, PATCH", // Allowed HTTP methods
-    credentials: true, // Allow cookies and sessions to be sent
-  })
-);
+// Connect to MongoDB
+connectDB();
 
-// ✅ Middleware for parsing JSON
+// CORS Middleware
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 app.use(express.json());
 
-// ✅ Session Middleware (Must be before Passport)
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "supersecretkey", // Session secret key
-    resave: false, // Don't resave sessions if not modified
-    saveUninitialized: true, // Save new sessions
-    cookie: {
-      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
-      maxAge: 1000 * 60 * 60 * 24, // Session duration (1 day)
-    },
-  })
-);
+app.use(session({
+    secret: process.env.SESSION_SECRET || "your_secret_key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.send.NODE_ENV === "production" }
+}));
 
-// ✅ Passport Middleware (After Session)
-app.use(passport.initialize()); // Initialize Passport
-app.use(passport.session()); // Enable session support for Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
-// ✅ Routes
-app.use("/auth", authRoute); // Authentication routes (e.g., /auth/google, /auth/logout)
-app.use("/api/music", musicRoute); // Music-related routes
-app.use("/api/playlist", playlistRoute); // Playlist-related routes
-
-// ✅ Root route for testing
-app.get("/", (req, res) => {
-  res.send("Welcome to the Music App Backend!");
+// Debug Middleware
+app.use((req, res, next) => {
+    console.log("Session:", req.session);
+    console.log("User:", req.user);
+    next();
 });
 
-// ✅ Connect to Database & Start Server
-app.listen(PORT, async () => {
-  try {
-    await connectDB(); // Connect to MongoDB
+// Routes
+app.use('/auth', authRoute);
+app.use('/api/music', musicRoute);
+app.use('/api/playlist', playlistRoute);
+
+app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-  } catch (error) {
-    console.error("Database connection error:", error.message);
-  }
 });
