@@ -36,6 +36,7 @@ useEffect(() => {
     getUser();
 }, []);
 console.log(user)
+
   return (
     <BrowserRouter>
       <Routes>
