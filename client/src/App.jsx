@@ -18,20 +18,23 @@ const App = () => {
   const [nextSong, setNextSong] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false);
 
-
   const getUser = async () => {
     try {
-      const url = `${import.meta.env.VITE_API_URL}/auth/login/success`;
-      const { data } = await axios.get(url, { withCredentials: true }); // ✅ Ensure credentials are sent
-      setUser(data.user);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/login/success`, { withCredentials: true });
+        if (response.data?.user) {
+            setUser(response.data.user);
+        } else {
+            setUser(null);
+        }
     } catch (error) {
-      console.error("Error fetching user:", error.response?.data || error.message);
+        console.error("Error fetching user:", error.response?.data?.message || error.message);
+        setUser(null);
     }
-  }
+};
 
-  useEffect(() => {
+useEffect(() => {
     getUser();
-  }, []);
+}, []);
 console.log(user)
   return (
     <BrowserRouter>
