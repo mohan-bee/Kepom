@@ -3,15 +3,17 @@ const passport = require('passport');
 const router = express.Router();
 
 router.get('/login/success', (req, res) => {
+    console.log("Session:", req.session); // ✅ Check if session exists
+    console.log("User in req.user:", req.user); // ✅ Should not be undefined
+
     if (req.user) {
-        return res.status(200).json({ 
-            message: "Login successful", 
-            user: req.user 
-        });
+        res.cookie("test_cookie", "test_value", { httpOnly: true, secure: false }); // ✅ Test if cookie is set
+        return res.status(200).json({ msg: "Login Success", user: req.user });
     } else {
-        return res.status(401).json({ message: "User Not Authenticated" });
+        return res.status(401).json({ msg: "User Not Authenticated" });
     }
 });
+
 
 router.get('/login/failed', (req, res) => {
     return res.status(401).json({ message: "Login Failed" });
