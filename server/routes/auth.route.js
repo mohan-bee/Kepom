@@ -1,59 +1,31 @@
 const router = require('express').Router()
 const passport = require('passport')
 
-
-router.get('/login/success', (req, res) => {
-    console.log("Session:", req.session);  // ✅ Check if session exists
-    console.log("User in req.user:", req.user);  // ✅ Should not be undefined
-    try {
-        if (req.user) {
-            return res.status(200).json({ msg: "Login Success", user: req.user });
-        } 
-        
-    } catch (error) {
-        console.log(error.message)
-        return res.status(401).json({ msg: "User Not Authenticated" });
+router.get(
+    "/auth/google",
+    passport.authenticate("google", { scope: ["profile", "email"] })
+  );
+  
+  router.get(
+    "/auth/google/callback",
+    passport.authenticate("google", { failureRedirect: "/login" }),
+    (req, res) => {
+      // Successful authentication, redirect to the frontend
+      res.redirect(`${process.env.CLIENT_URL}`);
     }
-});
-
-
-router.get('/login/failed', (req,res) => {
-    return res.status(401).send("Login Failed")
-})
-router.get("/google/callback", (req, res, next) => {
-    console.log("Google Callback Reached");
-    next();
-}, passport.authenticate('google', {
-    successRedirect: process.env.CLIENT_URL,
-    failureRedirect: '/login/failed'
-}));
-
-router.get('/login/success', (req, res) => {
-    console.log("Login Success Route Hit, User:", req.user);
+  );
+  
+  router.get("/logout", (req, res) => {
+    req.logout();
+    res.redirect(`${process.env.CLIENT_URL}`);
+  });
+  
+  router.get("/api/user", (req, res) => {
     if (req.user) {
-        return res.status(200).json({ msg: "Login Success", user: req.user });
+      res.json(req.user);
     } else {
-        return res.status(401).json({ msg: "User Not Authenticated" });
+      res.status(401).json({ message: "Not authenticated" });
     }
-});
-
-
-router.get('/google', passport.authenticate('google', ["profile", "email"]))
-
-router.get('/logout', (req, res, next) => {
-    req.logout(function(err) {  // Ensure logout callback is handled
-        if (err) {
-            return next(err);
-        }
-        req.session.destroy((err) => {  // Destroy session properly
-            if (err) {
-                return res.status(500).json({ message: "Logout failed" });
-            }
-            res.clearCookie('connect.sid');  // Clear session cookie (important)
-            res.redirect(process.env.CLIENT_URL);  // Redirect to frontend
-        });
-    });
-});
-
+  });
 
 module.exports = router
