@@ -9,7 +9,7 @@ passport.use(
        scope: ["profile", "email"]
    },
    function (accessToken, refreshToken, profile, callback){
-
+      console.log("Google Profile", profile)
       callback(null, profile);
   }
    )
