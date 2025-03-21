@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const handleLogin = () => {
-    window.open(`${import.meta.env.VITE_API_URL}/auth/google`, "_self")
+    window.open(`${import.meta.env.VITE_API_URL}/auth/google/callback`, "_self")
   }
   return (
     <div className="flex flex-col md:flex-row justify-between md:py-0 py-80 items-center h-screen">
