@@ -5,13 +5,18 @@ const router = express.Router();
 router.get('/login/success', (req, res) => {
     console.log("Session:", req.session); // ✅ Check if session exists
     console.log("User in req.user:", req.user); // ✅ Should not be undefined
-
+try {
+    
     if (req.user) {
-        res.cookie("test_cookie", "test_value", { httpOnly: true, secure: false }); // ✅ Test if cookie is set
+        res.cookie("test_cookie", "test_value", { httpOnly: true, secure: true }); // ✅ Test if cookie is set
         return res.status(200).json({ msg: "Login Success", user: req.user });
     } else {
         return res.status(401).json({ msg: "User Not Authenticated" });
     }
+} catch (error) {
+    console.log(error.message)
+    return res.status(401).json({ msg: "User Not Authenticated" , desc:error.message});
+}
 });
 
 
