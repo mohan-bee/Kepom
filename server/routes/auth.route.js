@@ -11,10 +11,23 @@ router.get('/login/success', (req,res) => {
 router.get('/login/failed', (req,res) => {
     return res.status(401).send("Login Failed")
 })
-router.get("/google/callback", passport.authenticate('google', {
+router.get("/google/callback", (req, res, next) => {
+    console.log("Google Callback Reached");
+    next();
+}, passport.authenticate('google', {
     successRedirect: process.env.CLIENT_URL,
     failureRedirect: '/login/failed'
-}))
+}));
+
+router.get('/login/success', (req, res) => {
+    console.log("Login Success Route Hit, User:", req.user);
+    if (req.user) {
+        return res.status(200).json({ msg: "Login Success", user: req.user });
+    } else {
+        return res.status(401).json({ msg: "User Not Authenticated" });
+    }
+});
+
 
 router.get('/google', passport.authenticate('google', ["profile", "email"]))
 
