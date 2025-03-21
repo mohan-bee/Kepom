@@ -15,22 +15,23 @@ const PORT = process.env.PORT
 
 app.use(express.json())
 app.use(session({
-    secret: "secret",
+    secret: "your_secret_key",
     resave: false,
     saveUninitialized: false,
-    cookie: { 
-        maxAge: 7 * 24 * 60 * 60 * 1000,  
-        secure: true,
-        httpOnly: true, 
-        sameSite: 'none' 
+    cookie: {
+        maxAge: 7 * 24 * 60 * 60 * 1000,  // 7 days
+        secure: process.env.NODE_ENV === "production", // ✅ Secure cookies in production
+        httpOnly: true,
+        sameSite: 'none'  // ✅ Required for cross-site cookies
     }
 }));
+
 
 app.use(passport.initialize());
 app.use(passport.session()); 
 
 app.use(cors({
-    origin: process.env.CLIENT_URL,
+    origin: '*',
     methods: "GET, POST, PUT, DELETE, PATCH",
     credentials: true 
 }));
