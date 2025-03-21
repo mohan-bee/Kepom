@@ -5,12 +5,13 @@ passport.use(
    new GoogleStrategy({
        clientID: process.env.GOOGLE_CLIENT_ID,
        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-       callbackURL: 'https://kepom.onrender.com/auth/google/callback',
+      //  callbackURL: 'https://kepom.onrender.com/auth/google/callback',
+       callbackURL: '/auth/google/callback',
        scope: ["profile", "email"]
    },
    function (accessToken, refreshToken, profile, callback){
       console.log("Google Profile", profile)
-      callback(null, profile);
+      return callback(null, profile);
   }
    )
 )
