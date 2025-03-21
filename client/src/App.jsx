@@ -20,14 +20,14 @@ const App = () => {
 
   const getUser = async () => {
     try {
-      const url = `${import.meta.env.VITE_API_URL}/auth/login/success`;
-      const { data } = await axios.get(url, { withCredentials: true });
-      setUser(data.user._json);
+        const url = `${import.meta.env.VITE_API_URL}/auth/login/success`;
+        const { data } = await axios.get(url, { withCredentials: true });  // ✅ Ensure credentials are sent
+        setUser(data.user);
     } catch (error) {
-      console.log(error.message);
+        console.error("Error fetching user:", error.response?.data || error.message);
     }
-  };
- 
+};
+
   useEffect(() => {
     getUser();
   }, []);

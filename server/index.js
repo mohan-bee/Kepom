@@ -18,17 +18,22 @@ app.use(session({
     secret: "secret",
     resave: false,
     saveUninitialized: false,
-    cookie: {maxAge: 7 * 24 * 60 * 60 * 1000, secure: true, httpOnly: true, sameSite: 'none' }
+    cookie: { 
+        maxAge: 7 * 24 * 60 * 60 * 1000, 
+        secure: process.env.NODE_ENV === "production", // ✅ Only secure in production
+        httpOnly: true, 
+        sameSite: 'none' 
+    }
 }));
 
+app.use(passport.initialize());  // ✅ Initialize Passport
+app.use(passport.session());     // ✅ Restore session
 
-app.use(passport.session())
-app.use(passport.initialize())
 app.use(cors({
     origin: process.env.CLIENT_URL,
     methods: "GET, POST , PUT, DELETE, PATCH",
-    credentials: true
-}))
+    credentials: true // ✅ Allow credentials (cookies)
+}));
 
 app.use('/auth', authRoute)
 app.use('/api/music', musicRoute)
