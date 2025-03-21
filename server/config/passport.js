@@ -18,11 +18,12 @@ passport.use(
 
 
 passport.serializeUser((user, done) => {
-   done(null, user)
-})
+   done(null, user.id);  // ✅ Store only user ID
+});
 
-passport.deserializeUser((user, done) => {
-   done(null, user)
-})
+passport.deserializeUser((id, done) => {
+   // Simulate fetching user from database if needed
+   done(null, { id });  // ✅ Retrieve user object
+});
 
 module.exports = passport

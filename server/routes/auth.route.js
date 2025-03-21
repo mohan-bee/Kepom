@@ -2,12 +2,17 @@ const router = require('express').Router()
 const passport = require('passport')
 
 
-router.get('/login/success', (req,res) => {
-    console.log(req.user)
-    if(req.user){
-        return res.status(200).json({msg: "Login Success", user: req.user})
+router.get('/login/success', (req, res) => {
+    console.log("Session:", req.session);  // ✅ Check if session exists
+    console.log("User in req.user:", req.user);  // ✅ Should not be undefined
+
+    if (req.user) {
+        return res.status(200).json({ msg: "Login Success", user: req.user });
+    } else {
+        return res.status(401).json({ msg: "User Not Authenticated" });
     }
-})
+});
+
 
 router.get('/login/failed', (req,res) => {
     return res.status(401).send("Login Failed")
