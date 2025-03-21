@@ -13,7 +13,7 @@ import axios from 'axios';
 import AddPlaylist from './pages/AddPlaylist';
 
 const App = () => {
-  const [user, setUser] = useState(["m"]);
+  const [user, setUser] = useState(null);
   const [currentSong, setCurrentSong] = useState(null); // Track the current playing song
   const [nextSong, setNextSong] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false);
