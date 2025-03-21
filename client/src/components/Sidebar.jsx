@@ -11,9 +11,9 @@ const Sidebar = () => {
         <li onClick={() => navigate('/')} className="flex items-center space-x-3 cursor-pointer hover:text-primary hover:bg-slate-900 py-3 px-2 rounded-md">
           <Home size={24} /> <span className='text-md'>Home</span>
         </li>
-        <li onClick={() => navigate('/add-playlist')} className="flex items-center space-x-3 cursor-pointer hover:text-primary hover:bg-slate-900  py-3 px-2 rounded-md">
+        {/* <li onClick={() => navigate('/add-playlist')} className="flex items-center space-x-3 cursor-pointer hover:text-primary hover:bg-slate-900  py-3 px-2 rounded-md">
           <Plus size={24} /> <span className="text-md">Add Playlist</span>
-        </li>
+        </li> */}
         <li onClick={() => navigate('/rooms')} className="flex items-center space-x-3 cursor-pointer hover:text-primary hover:bg-slate-900  py-3 px-2 rounded-md">
           <GroupIcon  size={24} /> <span className='text-md'>Rooms</span>
         </li>
